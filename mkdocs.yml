@@ -81,7 +81,6 @@ nav:
     - Report Issues: https://github.com/Haseeb-oss-eng/leafagro/issues
     - Examples:
         - examples/intro.ipynb
-        - examples/leafagro.ipynb
     - API Reference:
           - leafagro module: leafagro.md
           - common module: common.md
