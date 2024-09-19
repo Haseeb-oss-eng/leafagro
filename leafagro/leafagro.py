@@ -19,3 +19,14 @@ class Map(ipyleaflet.Map):
 
     def add_layer_control(self, position='topright'):
         self.add_control(ipyleaflet.LayersControl(position=position))
+
+    def add_geojson(self,data,name, **kwargs):
+
+        import json
+
+        if isinstance(data,str):
+            data = json.load(data)
+
+        layer = ipyleaflet.GeoJSON(data=data,name=name)
+
+        self.add(layer)
