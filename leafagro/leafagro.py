@@ -30,3 +30,5 @@ class Map(ipyleaflet.Map):
         layer = ipyleaflet.GeoJSON(data=data,name=name)
 
         self.add(layer)
+
+       
