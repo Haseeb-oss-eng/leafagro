@@ -27,6 +27,12 @@ class Map(ipyleaflet.Map):
         if isinstance(data,str):
             with open(data) as f:
                 data = json.load(f)
+        
+        if 'style' not in kwargs:
+            kwargs['style'] = {'color':'blue', 'weight': 1, 'fillOpacity':0}
+        
+        if 'hover_style' not in kwargs:
+            kwargs['hover_style'] = {'fillColor':'blue','fillOpacity': 0.8}
 
         layer = ipyleaflet.GeoJSON(data=data,name=name, **kwargs)
 
