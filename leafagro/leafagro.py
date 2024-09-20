@@ -28,7 +28,7 @@ class Map(ipyleaflet.Map):
             with open(data) as f:
                 data = json.load(f)
 
-        layer = ipyleaflet.GeoJSON(data=data,name=name)
+        layer = ipyleaflet.GeoJSON(data=data,name=name, **kwargs)
 
         self.add(layer)
 
