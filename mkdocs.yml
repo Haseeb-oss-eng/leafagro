@@ -84,3 +84,4 @@ nav:
     - API Reference:
           - leafagro module: leafagro.md
           - common module: common.md
+          - utils module: utils.md
