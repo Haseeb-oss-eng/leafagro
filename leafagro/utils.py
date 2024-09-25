@@ -10,4 +10,4 @@ def csv_df(csv_file):
     """
     import pandas as pd
 
-    return pd.read(csv_file)
+    return pd.read_csv(csv_file)
