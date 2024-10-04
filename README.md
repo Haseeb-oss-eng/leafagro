@@ -5,7 +5,7 @@
 [![image](https://img.shields.io/conda/vn/conda-forge/leafagro.svg)](https://anaconda.org/conda-forge/leafagro)
 
 
-**A Python Package for Analyzing Agriculture data obtained from Agromonitoring API.**
+**A Python Package for Analyzing Agriculture datasets.**
 
 
 -   Free software: MIT License
@@ -14,4 +14,5 @@
 
 ## Features
 
--   TODO
+-   Visualizing raster and vector data.
+-   Analyzing Agriculture raster and vector data.
