@@ -96,4 +96,14 @@ class Map(ipyleaflet.Map):
                 data = shp.__geo_interface__
 
         self.add_geojson(data, name, **kwargs)
-       
+    
+    def add_ImageOverlay(self, url, bounds, name="image", **kwargs):
+        """Overlays the image on the map
+
+        Args:
+            urls (str): The URL of image in String
+            bounds (list): The bounds of the image to Overlay on map
+            name (str, Optional): The name of the overlaying image, Default is "image".  
+        """
+        layer = ipyleaflet.ImageOverlay(url=url, bounds=bounds, name=name, **kwargs)
+        self.add(layer)
