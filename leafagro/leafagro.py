@@ -97,7 +97,7 @@ class Map(ipyleaflet.Map):
 
         self.add_geojson(data, name, **kwargs)
     
-    def add_ImageOverlay(self, url, bounds, name="image", **kwargs):
+    def imageOverlay(self, url, bounds, name="image", **kwargs):
         """Overlays the image on the map
 
         Args:
