@@ -128,3 +128,16 @@ class Map(ipyleaflet.Map):
         if zoom_to_layer:
             self.center = client.center()
             self.zoom = client.default_zoom
+    
+    def add_zoom_slider(self, description= "Zoom level", min=0, max=15, value=7, position="topright", **kwargs):
+
+        """Add Slider-level bar in map
+
+        Args:
+            position (str, optional): The position of zoom slider. Default position: topright.
+        """
+        zoom_slider = widgets.IntSlider(description = description, min=min, max=max)
+
+        control = ipyleaflet.widgetControl(widget = zoom_slider, position=position)
+        self.add(control)
+        widgets.jslink((zoom_slider,'value'),(self,'zoom'))
