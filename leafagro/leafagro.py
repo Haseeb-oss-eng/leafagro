@@ -97,7 +97,7 @@ class Map(ipyleaflet.Map):
 
         self.add_geojson(data, name, **kwargs)
     
-    def imageOverlay(self, url, bounds, name="image", **kwargs):
+    def add_imageOverlay(self, url, bounds, name="image", **kwargs):
         """Overlays the image on the map
 
         Args:
@@ -107,3 +107,24 @@ class Map(ipyleaflet.Map):
         """
         layer = ipyleaflet.ImageOverlay(url=url, bounds=bounds, name=name, **kwargs)
         self.add(layer)
+    
+    def add_raster(self, data, name="raster", zoom_to_layer=True, **kwargs):
+        """Add the Raster in map
+
+        Args:
+            data (_type_): _description_
+            name (str, optional): _description_. Defaults to "raster".
+            zoom_to_layer (bool, optional): _description_. Defaults to True.
+        """
+        try:
+            from localtileserver import TileClient, get_leaflet_tile_layer
+        except:
+            raise ImportError("Please install localtileserver package")
+
+        client = TileClient(data)
+        layer = get_leaflet_tile_layer(client, name=name, **kwargs)
+        self.add(layer)
+
+        if zoom_to_layer:
+            self.center = client.center()
+            self.zoom = client.default_zoom

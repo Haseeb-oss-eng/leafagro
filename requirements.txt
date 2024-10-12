@@ -1,3 +1,4 @@
 ipyleaflet
 numpy
+localtileserver
 pandas
