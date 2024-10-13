@@ -139,6 +139,6 @@ class Map(ipyleaflet.Map):
         """
         zoom_slider = widgets.IntSlider(description = description, min=min, max=max)
 
-        control = ipyleaflet.widgetControl(widget = zoom_slider, position=position)
+        control = ipyleaflet.WidgetControl(widget = zoom_slider, position=position)
         self.add(control)
         widgets.jslink((zoom_slider,'value'),(self,'zoom'))
