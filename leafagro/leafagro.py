@@ -1,5 +1,6 @@
 import ipyleaflet
-from ipyleaflet import basemaps
+from ipyleaflet import basemaps, widgetControl, SplitMapControl
+import ipywidgets as widgets
 
 class Map(ipyleaflet.Map):
     """This is the map class that inherits from ipyleaflet.Map.
