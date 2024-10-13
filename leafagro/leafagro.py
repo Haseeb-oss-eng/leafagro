@@ -1,5 +1,5 @@
 import ipyleaflet
-from ipyleaflet import basemaps, widgetControl, SplitMapControl
+from ipyleaflet import basemaps, WidgetControl, SplitMapControl
 import ipywidgets as widgets
 
 class Map(ipyleaflet.Map):
