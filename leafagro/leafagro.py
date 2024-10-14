@@ -27,7 +27,7 @@ class Map(ipyleaflet.Map):
 
         super().__init__(center=center, zoom=zoom, **kwargs)
         if layer_control_flag:
-            self.add_layers_control()
+            self.add_layer_control()
 
         self.add_toolbar()
 
