@@ -47,7 +47,14 @@ class Map(ipyleaflet.Map):
         Args:
             position (str, optional): The position the layer control. Defaults to 'topright'.
         """
-        self.add_control(ipyleaflet.LayersControl(position=position))
+        has_control = False
+        for controls in self.controls:
+            if isinstance(controls, ipyleaflet.LayersControl):
+                has_control = True
+                break
+            
+        if not has_control:
+            self.add_control(ipyleaflet.LayersControl(position=position))
 
     def add_geojson(self,data,name='geojson', **kwargs):
         """Adds a GeoJSON layer to the map.
