@@ -1,5 +1,5 @@
 import ipyleaflet
-from ipyleaflet import basemaps,  SplitMapControl
+from ipyleaflet import basemaps, WidgetControl,SplitMapControl
 import ipywidgets as widgets
 
 class Map(ipyleaflet.Map):
@@ -149,3 +149,161 @@ class Map(ipyleaflet.Map):
         control = ipyleaflet.WidgetControl(widget = zoom_slider, position=position)
         self.add(control)
         widgets.jslink((zoom_slider,'value'),(self,'zoom'))
+    
+    def add_widget(self, widget, position="topright"):
+        """Adds a widget to the map.
+
+        Args:
+            widget (object): The widget to be added.
+            position (str, optional): The position of the widget. Defaults to "topright".
+        """
+        control = ipyleaflet.WidgetControl(widget=widget, position=position)
+        self.add(control)
+
+    def add_opacity_slider(
+        self, layer_index=-1, description="Opacity", position="topright"
+    ):
+        """Adds an opacity slider to the map.
+
+        Args:
+            layer (object): The layer to which the opacity slider is added.
+            description (str, optional): The description of the opacity slider. Defaults to "Opacity".
+            position (str, optional): The position of the opacity slider. Defaults to "topright".
+        """
+        layer = self.layers[layer_index]
+        opacity_slider = widgets.FloatSlider(
+            description=description,
+            min=0,
+            max=1,
+            value=layer.opacity,
+            style={"description_width": "initial"},
+        )
+
+        def update_opacity(change):
+            layer.opacity = change["new"]
+
+        opacity_slider.observe(update_opacity, "value")
+
+        control = ipyleaflet.WidgetControl(widget=opacity_slider, position=position)
+        self.add(control)
+
+    def add_basemap_gui(self, basemaps=None, position="topright"):
+        """Adds a basemap GUI to the map.
+
+        Args:
+            position (str, optional): The position of the basemap GUI. Defaults to "topright".
+        """
+
+        basemap_selector = widgets.Dropdown(
+            options=[
+                "OpenStreetMap",
+                "OpenTopoMap",
+                "Esri.WorldImagery",
+                "Esri.NatGeoWorldMap",
+            ],
+            description="Basemap",
+        )
+
+        def update_basemap(change):
+            self.add_basemap(change["new"])
+
+        basemap_selector.observe(update_basemap, "value")
+
+        control = ipyleaflet.WidgetControl(widget=basemap_selector, position=position)
+        self.add(control)
+
+    def add_toolbar(self, position="topright"):
+        """Adds a toolbar to the map.
+
+        Args:
+            position (str, optional): The position of the toolbar. Defaults to "topright".
+        """
+
+        padding = "0px 0px 0px 5px"  # upper, right, bottom, left
+
+        toolbar_button = widgets.ToggleButton(
+            value=False,
+            tooltip="Toolbar",
+            icon="wrench",
+            layout=widgets.Layout(width="28px", height="28px", padding=padding),
+        )
+
+        close_button = widgets.ToggleButton(
+            value=False,
+            tooltip="Close the tool",
+            icon="times",
+            button_style="primary",
+            layout=widgets.Layout(height="28px", width="28px", padding=padding),
+        )
+
+        toolbar = widgets.VBox([toolbar_button])
+
+        def close_click(change):
+            if change["new"]:
+                toolbar_button.close()
+                close_button.close()
+                toolbar.close()
+
+        close_button.observe(close_click, "value")
+
+        rows = 2
+        cols = 2
+        grid = widgets.GridspecLayout(
+            rows, cols, grid_gap="0px", layout=widgets.Layout(width="65px")
+        )
+
+        icons = ["folder-open", "map", "info", "question"]
+
+        for i in range(rows):
+            for j in range(cols):
+                grid[i, j] = widgets.Button(
+                    description="",
+                    button_style="primary",
+                    icon=icons[i * rows + j],
+                    layout=widgets.Layout(width="28px", padding="0px"),
+                )
+
+        def toolbar_click(change):
+            if change["new"]:
+                toolbar.children = [widgets.HBox([close_button, toolbar_button]), grid]
+            else:
+                toolbar.children = [toolbar_button]
+
+        toolbar_button.observe(toolbar_click, "value")
+        toolbar_ctrl = WidgetControl(widget=toolbar, position="topright")
+        self.add(toolbar_ctrl)
+
+        output = widgets.Output()
+        output_control = WidgetControl(widget=output, position="bottomright")
+        self.add(output_control)
+
+        def toolbar_callback(change):
+            if change.icon == "folder-open":
+                with output:
+                    output.clear_output()
+                    print(f"You can open a file")
+            elif change.icon == "map":
+                with output:
+                    output.clear_output()
+                    print(f"You can add a layer")
+            else:
+                with output:
+                    output.clear_output()
+                    print(f"Icon: {change.icon}")
+
+        for tool in grid.children:
+            tool.on_click(toolbar_callback)
+
+    def add_split_map(self, left_layer, right_layer, **kwargs):
+        """Adds a split map to the current map.
+
+        Args:
+            left_layer (object): The left layer of the split map.
+            right_layer (object): The right layer of the split map.
+        """
+
+        control = SplitMapControl(
+            left_layer=left_layer,
+            right_layer=right_layer,
+        )
+        self.add(control)
