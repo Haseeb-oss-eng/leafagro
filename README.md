@@ -15,4 +15,3 @@
 ## Features
 
 -   Visualizing raster and vector data.
--   Analyzing Agriculture raster and vector data.
