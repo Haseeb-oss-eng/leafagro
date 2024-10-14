@@ -16,7 +16,20 @@ class Map(ipyleaflet.Map):
             center (list, optional): set the center . Defaults to [20, 0].
             zoom (int, optional): set the zoom. Defaults to 2.
         """
+        if "scroll_wheel_zoom" not in kwargs:
+            kwargs["scroll_wheel_zoom"] = True
+
+        if "add_layer_control" not in kwargs:
+            layer_control_flag = True
+        else:
+            layer_control_flag = kwargs["add_layer_control"]
+        kwargs.pop("add_layer_control", None)
+
         super().__init__(center=center, zoom=zoom, **kwargs)
+        if layer_control_flag:
+            self.add_layers_control()
+
+        self.add_toolbar()
 
     def add_layer_tile(self, url, name, **kwargs):
         layer = ipyleaflet.TileLayer(url=url, name=name, **kwargs)
