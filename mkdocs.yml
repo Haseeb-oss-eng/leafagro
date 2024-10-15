@@ -83,6 +83,12 @@ nav:
         - examples/intro.ipynb
         - examples/leafagro.ipynb
         - examples/csv.ipynb
+        - examples/ipyWidgets.ipynb
+        - examples/raster.ipynb
+        - examples/toolbar.ipynb
+        - examples/vector.ipynb
+        
+
     - API Reference:
           - leafagro module: leafagro.md
           - common module: common.md

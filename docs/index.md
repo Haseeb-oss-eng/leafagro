@@ -13,4 +13,6 @@
 
 ## Features
 
--   TODO
+-   Visualizing raster and vector data
+-   Create Interactive Maps
+-   Visualize Geospatial Data
