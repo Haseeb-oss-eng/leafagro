@@ -11,6 +11,7 @@ pytest
 pytest-runner
 
 ipykernel
+localtileserver
 livereload
 nbconvert
 nbformat
