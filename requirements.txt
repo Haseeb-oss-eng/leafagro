@@ -3,3 +3,4 @@ numpy
 localtileserver
 pandas
 ipywidgets
+folium
