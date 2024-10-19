@@ -322,14 +322,14 @@ class Map(ipyleaflet.Map):
         self.add(control)
     
     def add_agrimonitor_tile(self, API, polygonId, start_date, end_date, data, data_type, **kwargs):
-        """add the agri data retrived from AgriMonitor (tile)
+        """add the agri data retrieved from AgriMonitor (tile)
 
         Args:
             API (str): API key from agrimontoring.com
             polygonId (str): provide polygon Id 
             start_date (str): provide Start date in "YYY/MM/DD"
             end_date (str): provide End date in "YYY/MM/DD"
-            data (str): provide the data needed to retrive. available data:- ["True Color","False Color","NDVI","EVI","EVI2","NRI","DSWI","NDWI"]
+            data (str): provide the data needed to retrieve. available data:- ["True Color","False Color","NDVI","EVI","EVI2","NRI","DSWI","NDWI"]
             data_type(str): provide file type. (ex."tile","image")
         """
         import requests
@@ -357,5 +357,5 @@ class Map(ipyleaflet.Map):
                 # add the tile URLs
                 data_files.append(entry[data_type][data])
         else:
-            print("The given data is not as in the list, Provide the data availabe based on the data list")
+            print("The given data is not as in the list, Provide the data available based on the data list")
                 
