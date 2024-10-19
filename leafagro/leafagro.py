@@ -320,3 +320,42 @@ class Map(ipyleaflet.Map):
             right_layer=right_layer,
         )
         self.add(control)
+    
+    def add_agrimonitor_tile(self, API, polygonId, start_date, end_date, data, data_type, **kwargs):
+        """add the agri data retrived from AgriMonitor (tile)
+
+        Args:
+            API (str): API key from agrimontoring.com
+            polygonId (str): provide polygon Id 
+            start_date (str): provide Start date in "YYY/MM/DD"
+            end_date (str): provide End date in "YYY/MM/DD"
+            data (str): provide the data needed to retrive. available data:- ["True Color","False Color","NDVI","EVI","EVI2","NRI","DSWI","NDWI"]
+            data_type(str): provide file type. (ex."tile","image")
+        """
+        import requests
+        import time
+        from datetime import datetime
+
+        allowed = ["True Color","False Color","NDVI","EVI","EVI2","NRI","DSWI","NDWI"]
+
+        dates = []
+        data_files = []
+
+        if data in allowed:
+            url = f"http://api.agromonitoring.com/agro/1.0/image/search?start={start_date}&end={end_date}&polyid={polygon_id}&appid={API_KEY}"
+            response = requests.get(metadata_url)
+            response_json = response.json()
+
+            for entry in response_json:
+                # Convert UNIX timestamp to human-readable date
+                dt = entry['dt']
+                date_str = datetime.utcfromtimestamp(dt).strftime('%Y-%m-%d')
+                
+                # Print the date
+                dates.append(date_str)
+                
+                # add the tile URLs
+                data_files.append(entry[data_type][data])
+        else:
+            print("The given data is not as in the list, Provide the data availabe based on the data list")
+                
