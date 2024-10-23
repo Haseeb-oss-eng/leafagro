@@ -17,7 +17,7 @@ class Agromonitoring():
         """
         dates = []
         data_files = []
-        allowed = ["True Color", "False Color", "NDVI", "EVI", "EVI2", "NRI", "DSWI", "NDWI"]
+        allowed = ["truecolor", "falsecolor", "ndvi", "evi", "evi2", "nri", "dswi", "ndwi"]
         if data in allowed:
             start_date = int(time.mktime(time.strptime(StartDate, '%Y-%m-%d')))
             end_date = int(time.mktime(time.strptime(EndDate, '%Y-%m-%d')))
