@@ -320,6 +320,41 @@ class Map(ipyleaflet.Map):
             right_layer=right_layer,
         )
         self.add(control)
+
+    def show_agromonitoring_tile(self,API_key, polygonId, startDate, endDate, data,table=False):
+
+        """Add the Agromonitoring tile layer in map
+
+        Args:
+            API_key (str): Provide the Agromonitoring API Key.
+            polygonId (str): Provide the polygon ID (study area) from Agromonitoring.
+            startDate (str): Date format "YYYY-MM-DD" (ex. "2018-01-01").
+            endDate (str): Date format "YYYY-MM-DD" (ex. "2018-02-01").
+            data (str): Data to retrieve from Agromonitoring. Available Data ['truecolor', 'falsecolor', 'ndvi', 'evi', 'evi2', 'ndwi', 'nri', 'dswi'].
+            table (bool): Display the tables of Data available with data (default: False).
+        """
+        # Retrieve the tile data from agromonitoring.py
+        df = get_agromonitoring_tile(API_key, polygonId, startDate, endDate, data)
+
+        if df is None:
+            print("No data to display.")
+            return
+
+        # Display the table if requested
+        if table:
+            widget = widgets.Output(layout={'border': '1px solid black'})
+            with widget:
+                display(df)
+            output_widget = WidgetControl(widget=widget, position='topright')
+            self.add_control(output_widget)
+
+        # Add tiles to the map
+        for index, row in df.iterrows():
+            tile_url = row['URL']
+            date = row['Date']
+            self.add_tile_layer(tile_url, name=f"{date} {data}")
+    
+    #def display_stats
     
     
                 
