@@ -346,6 +346,7 @@ class Map(ipyleaflet.Map):
         if table:
             widget = widgets.Output(layout={'border': '1px solid black'})
             with widget:
+                widget.clear_output()
                 display(df)
             output_widget = WidgetControl(widget=widget, position='topright')
             self.add_control(output_widget)
