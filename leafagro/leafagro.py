@@ -333,8 +333,10 @@ class Map(ipyleaflet.Map):
             data (str): Data to retrieve from Agromonitoring. Available Data ['truecolor', 'falsecolor', 'ndvi', 'evi', 'evi2', 'ndwi', 'nri', 'dswi'].
             table (bool): Display the tables of Data available with data (default: False).
         """
+        from  leafagro.agromonitoring import Agromonitoring as ag
+
         # Retrieve the tile data from agromonitoring.py
-        df = get_agromonitoring_tile(API_key, polygonId, startDate, endDate, data)
+        df = ag.get_agromonitoring_tile(API_key, polygonId, startDate, endDate, data)
 
         if df is None:
             print("No data to display.")
