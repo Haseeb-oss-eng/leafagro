@@ -354,7 +354,7 @@ class Map(ipyleaflet.Map):
         for index, row in df.iterrows():
             tile_url = row['URL']
             date = row['Date']
-            self.add_tile_layer(tile_url, name=f"{date} {data}")
+            self.add_layer_tile(tile_url, name=f"{date} {data}")
     
     #def display_stats
     
