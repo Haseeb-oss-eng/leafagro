@@ -374,7 +374,7 @@ class Map(ipyleaflet.Map):
 
     
     
-    def display_stats(self, statsUrl, polygonID):
+    def display_stats(self, statsUrl):
         """Display Summary Statistics of Polygon
 
         Args:
@@ -383,6 +383,7 @@ class Map(ipyleaflet.Map):
         """
         import requests
         import time
+        import pandas as pd
         from urllib.parse import urlparse, parse_qs
   
         try:
@@ -391,16 +392,16 @@ class Map(ipyleaflet.Map):
             data_dict = data.json()
             stats_df = pd.DataFrame([data_dict], index=[1], columns=data_dict.keys())
 
-            # Define polygons URL using the API key
-            polygons_url = f"http://api.agromonitoring.com/agro/1.0/polygons?appid={API_KEY}"
-            response = requests.get(polygons_url)
-
             # Parse the stats URL to extract polygon ID and API key
             parsed_url = urlparse(statsUrl)
             path_segments = parsed_url.path.split('/')
             polygon_id = path_segments[-1]  # Extract polygon ID
             query_params = parse_qs(parsed_url.query)
             api_key = query_params.get('appid', [None])[0]  # Extract API key
+
+            # Define polygons URL using the API key
+            polygons_url = f"http://api.agromonitoring.com/agro/1.0/polygons?appid={api_key}"
+            response = requests.get(polygons_url)
 
             if response.status_code == 200:
                 metadata = response.json()
