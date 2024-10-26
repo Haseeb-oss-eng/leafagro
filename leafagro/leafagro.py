@@ -372,7 +372,7 @@ class Map(ipyleaflet.Map):
         import requests
         import time
         from leafagro import agromonitoring as ag
-        polygons_url = f"http://api.agromonitoring.com/agro/1.0/polygons?appid={API_KEY}"
+        polygons_url = f"http://api.agromonitoring.com/agro/1.0/polygons?appid={API_Key}"
 
         try:
 
