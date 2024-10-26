@@ -359,7 +359,7 @@ class Map(ipyleaflet.Map):
             date = row['Date']
             self.add_layer_tile(tile_url, name=f"{date} {data}")
     
-    def display_stats(self,API_key, polygonId, startDate, endDate, data):
+    def display_stats(self,API_Key, polygonId, startDate, endDate, data):
         """Display the Summary Statistics of Polygon
 
         Args:
@@ -386,7 +386,7 @@ class Map(ipyleaflet.Map):
                             coordinates = polygons['geo_json']#['geometry']
                             # print("ID of Polygon is:",Id)
                             self.add_geojson(coordinates)
-                            stats_df = ag.get_agromonitoring_stat(API_key,polygonId, startDate, endDate, data)
+                            stats_df = ag.get_agromonitoring_stat(API_Key,polygonId, startDate, endDate, data)
                             if stats_df is not None:
                                 html_content = df.to_html(classes='styled-table')
                                 # Create the HTML string with inline CSS for font size and color
