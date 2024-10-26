@@ -346,21 +346,16 @@ class Map(ipyleaflet.Map):
 
         # Display the table if requested
         if table:
-            widget = widgets.Output(layout={'border': '1px solid black'})
-            with widget:
-                widget.clear_output()
-                display(df)
-            output_widget = WidgetControl(widget=widget, position='topright')
-            self.add_control(output_widget)
+            print(df)
 
-        # Add tiles to the map
+        # Add all tiles to the map
         for index, row in df.iterrows():
             tile_url = row['URL']
             date = row['Date']
             self.add_layer_tile(tile_url, name=f"{date} {data}")
     
-    def display_stats(self,API_Key, polygonId, startDate, endDate, data):
-        """Display the Summary Statistics of Polygon
+    def show_agromontioring_stats(self,API_Key, polygonId, startDate, endDate, data):
+        """Display the Summary Statistics of Table
 
         Args:
             API_key (str): Provide the Agromonitoring API Key.
@@ -369,50 +364,84 @@ class Map(ipyleaflet.Map):
             endDate (str): Date format "YYYY-MM-DD" (ex. "2018-02-01").
             data (str): Data to retrieve from Agromonitoring. Available Data ['truecolor', 'falsecolor', 'ndvi', 'evi', 'evi2', 'ndwi', 'nri', 'dswi'].
         """
+        
+        stats_df = ag.get_agromonitoring_stat(API_Key,polygonId, startDate, endDate, data)
+        if stats_df is not None:
+                print(stats_df)
+        else:
+                print(f"The given data or Polygon ID is Wrong is not available in Agromonitoring")   
+
+    
+    
+    def display_stats(self, statsUrl, polygonID):
+        """Display Summary Statistics of Polygon
+
+        Args:
+            statsUrl (str): Input Stats Url from agromonitoring stats.
+            polygonID (str): Provide polygon ID of Agromonitoring.
+        """
         import requests
         import time
-        from  leafagro.agromonitoring import Agromonitoring as ag
-        polygons_url = f"http://api.agromonitoring.com/agro/1.0/polygons?appid={API_Key}"
-
+        from urllib.parse import urlparse, parse_qs
+  
         try:
+        # Fetch statistics data from the given URL
+            data = requests.get(statsUrl)
+            data_dict = data.json()
+            stats_df = pd.DataFrame([data_dict], index=[1], columns=data_dict.keys())
 
+            # Define polygons URL using the API key
+            polygons_url = f"http://api.agromonitoring.com/agro/1.0/polygons?appid={API_KEY}"
             response = requests.get(polygons_url)
+
+            # Parse the stats URL to extract polygon ID and API key
+            parsed_url = urlparse(statsUrl)
+            path_segments = parsed_url.path.split('/')
+            polygon_id = path_segments[-1]  # Extract polygon ID
+            query_params = parse_qs(parsed_url.query)
+            api_key = query_params.get('appid', [None])[0]  # Extract API key
 
             if response.status_code == 200:
                 metadata = response.json()
-                if isinstance(metadata,list):
-                    for polygon in metadata:
-                        if(polygon.get('id') == polygonId):
-                            coordinates = polygon['geo_json']#['geometry']
-                            # print("ID of Polygon is:",Id)
-                            self.add_geojson(coordinates)
-                            stats_df = ag.get_agromonitoring_stat(API_Key,polygonId, startDate, endDate, data)
-                            if stats_df is not None:
-                                html_content = df.to_html(classes='styled-table')
-                                # Create the HTML string with inline CSS for font size and color
-                                html_styled = f"""
-                                <style>
-                                .styled-table {{
-                                    font-size: 18px;
-                                    color: green;
-                                }}
-                                </style>
-                                {html_content}
-                                """
-                                widget = Output(layout={'border': '1px solid white'})
-                                output_widget = WidgetControl(widget=widget, position='bottomright')
-                                self.add(output_widget)
-                                with widget:
-                                    widget.clear_output()
-                                    display(HTML(html_styled))
-                            else:
-                                print(f"The given data or Polygon ID is Wrong is not available in Agromonitoring")
+                coordinates = None
+                if isinstance(metadata, list):
+                    for polygons in metadata:
+                        Id = polygons.get('id')
+                        if Id == polygon_id:
+                            coordinates = polygons['geo_json']  # Extract coordinates
                             break
-            else:
-                raise Exception(f"Failed to retrieve polygons data. HTTP Status Code: {response.status_code}")
-        except requests.exceptions.RequestException as e:
-                print(f"An error occurred while making the API request: {e}")    
 
-    
-    
-                
+                # Add the polygon's geojson to the map
+                if coordinates:
+                    self.add_geojson(coordinates)
+                else:
+                    print(f"No matching polygon found for ID: {polygon_id}")
+
+                # If statistics data is available, display it
+                if stats_df is not None:
+                    # Convert stats_df to HTML with some inline styling
+                    html_content = stats_df.to_html(classes='styled-table')
+                    html_styled = f"""
+                    <style>
+                    .styled-table {{
+                        font-size: 18px;
+                        color: green;
+                    }}
+                    </style>
+                    {html_content}
+                    """
+                    
+                    # Create an output widget and add it to the map
+                    widget = Output(layout={'border': '1px solid white'})
+                    output_widget = WidgetControl(widget=widget, position='bottomright')
+                    self.add(output_widget)
+                    with widget:
+                        widget.clear_output()
+                        display(HTML(html_styled))
+                else:
+                    print("No statistics data available.")
+            else:
+                print(f"Error fetching polygons: {response.status_code}")
+
+        except requests.exceptions.RequestException as e:
+            print(f"An error occurred while making the API request: {e}")
