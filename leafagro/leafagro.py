@@ -364,6 +364,7 @@ class Map(ipyleaflet.Map):
             endDate (str): Date format "YYYY-MM-DD" (ex. "2018-02-01").
             data (str): Data to retrieve from Agromonitoring. Available Data ['truecolor', 'falsecolor', 'ndvi', 'evi', 'evi2', 'ndwi', 'nri', 'dswi'].
         """
+        from leafagro.agromonitoring import Agromonitoring as ag
         
         stats_df = ag.get_agromonitoring_stat(API_Key,polygonId, startDate, endDate, data)
         if stats_df is not None:
