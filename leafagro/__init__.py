@@ -2,6 +2,6 @@
 
 __author__ = """Haseeb Habeebulla"""
 __email__ = "ibnhabeebulla@gmail.com"
-__version__ = "0.0.10"
+__version__ = "0.0.11"
 
 from .leafagro import Map
