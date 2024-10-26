@@ -1,6 +1,7 @@
 import ipyleaflet
 from ipyleaflet import basemaps, WidgetControl,SplitMapControl
-import ipywidgets as widgets
+import ipywidgets as widgets, Output
+from IPython.display import display, HTML
 
 class Map(ipyleaflet.Map):
     """This is the map class that inherits from ipyleaflet.Map.
@@ -357,7 +358,60 @@ class Map(ipyleaflet.Map):
             date = row['Date']
             self.add_layer_tile(tile_url, name=f"{date} {data}")
     
-    #def display_stats
+    def display_stats(self,API_key, polygonId, startDate, endDate, data):
+        """Display the Summary Statistics of Polygon
+
+        Args:
+            API_key (str): Provide the Agromonitoring API Key.
+            polygonId (str): Provide the polygon ID (study area) from Agromonitoring.
+            startDate (str): Date format "YYYY-MM-DD" (ex. "2018-01-01").
+            endDate (str): Date format "YYYY-MM-DD" (ex. "2018-02-01").
+            data (str): Data to retrieve from Agromonitoring. Available Data ['truecolor', 'falsecolor', 'ndvi', 'evi', 'evi2', 'ndwi', 'nri', 'dswi'].
+        """
+        import requests
+        import time
+        from leafagro import agromonitoring as ag
+        polygons_url = f"http://api.agromonitoring.com/agro/1.0/polygons?appid={API_KEY}"
+
+        try:
+
+            response = requests.get(polygons_url)
+
+            if response.status_code == 200:
+                metadata = response.json()
+                if isinstance(metadata,list):
+                    for polygon in metadata:
+                        if(polygons.get('id') == polygonId):
+                            coordinates = polygons['geo_json']#['geometry']
+                            # print("ID of Polygon is:",Id)
+                            self.add_geojson(coordinates)
+                            stats_df = ag.get_agromonitoring_stat(API_key,polygonId, startDate, endDate, data)
+                            if stats_df is not None:
+                                html_content = df.to_html(classes='styled-table')
+                                # Create the HTML string with inline CSS for font size and color
+                                html_styled = f"""
+                                <style>
+                                .styled-table {{
+                                    font-size: 18px;
+                                    color: green;
+                                }}
+                                </style>
+                                {html_content}
+                                """
+                                widget = Output(layout={'border': '1px solid white'})
+                                output_widget = WidgetControl(widget=widget, position='bottomright')
+                                self.add(output_widget)
+                                with widget:
+                                    widget.clear_output()
+                                    display(HTML(html_styled))
+                            else:
+                                print(f"The given data or Polygon ID is Wrong is not available in Agromonitoring")
+                            break
+            else:
+                raise Exception(f"Failed to retrieve polygons data. HTTP Status Code: {response.status_code}")
+        except requests.exceptions.RequestException as e:
+                print(f"An error occurred while making the API request: {e}")    
+
     
     
                 

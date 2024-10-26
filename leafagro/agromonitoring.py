@@ -89,6 +89,6 @@ class Agromonitoring():
                     print(f"Error: API request failed with status code {response.status_code}")
                     print(f"Response content: {response.content}")
         else:
-            print(f"The given data is not available in Agromonitoring")
+            return None
 
     
