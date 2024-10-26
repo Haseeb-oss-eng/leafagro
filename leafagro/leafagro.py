@@ -382,8 +382,8 @@ class Map(ipyleaflet.Map):
                 metadata = response.json()
                 if isinstance(metadata,list):
                     for polygon in metadata:
-                        if(polygons.get('id') == polygonId):
-                            coordinates = polygons['geo_json']#['geometry']
+                        if(polygon.get('id') == polygonId):
+                            coordinates = polygon['geo_json']#['geometry']
                             # print("ID of Polygon is:",Id)
                             self.add_geojson(coordinates)
                             stats_df = ag.get_agromonitoring_stat(API_Key,polygonId, startDate, endDate, data)
