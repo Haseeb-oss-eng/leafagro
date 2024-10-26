@@ -1,6 +1,7 @@
 import ipyleaflet
 from ipyleaflet import basemaps, WidgetControl,SplitMapControl
-import ipywidgets as widgets, Output
+import ipywidgets as widgets
+from ipywidgets import Output
 from IPython.display import display, HTML
 
 class Map(ipyleaflet.Map):
