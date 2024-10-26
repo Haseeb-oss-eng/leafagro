@@ -347,12 +347,12 @@ class Map(ipyleaflet.Map):
         # Display the table if requested
         if table:
             print(df)
-
+        else:
         # Add all tiles to the map
-        for index, row in df.iterrows():
-            tile_url = row['URL']
-            date = row['Date']
-            self.add_layer_tile(tile_url, name=f"{date} {data}")
+            for index, row in df.iterrows():
+                tile_url = row['URL']
+                date = row['Date']
+                self.add_layer_tile(tile_url, name=f"{date} {data}")
     
     def show_agromontioring_stats(self,API_Key, polygonId, startDate, endDate, data):
         """Display the Summary Statistics of Table
