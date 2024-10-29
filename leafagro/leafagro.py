@@ -261,8 +261,8 @@ class Map(ipyleaflet.Map):
 
         close_button.observe(close_click, "value")
 
-        rows = 2
-        cols = 2
+        rows = 1
+        cols = 1
         grid = widgets.GridspecLayout(
             rows, cols, grid_gap="0px", layout=widgets.Layout(width="65px")
         )
