@@ -267,7 +267,8 @@ class Map(ipyleaflet.Map):
             rows, cols, grid_gap="0px", layout=widgets.Layout(width="65px")
         )
 
-        icons = ["folder-open", "map", "info", "question"]
+        # icons = ["folder-open", "map", "info", "question"]
+        icons = ["basemap"]
 
         for i in range(rows):
             for j in range(cols):
@@ -293,10 +294,10 @@ class Map(ipyleaflet.Map):
         self.add(output_control)
 
         def toolbar_callback(change):
-            if change.icon == "folder-open":
+            if change.icon == "basemap":
                 with output:
                     output.clear_output()
-                    print(f"You can open a file")
+                    add_basemap_gui()
             elif change.icon == "map":
                 with output:
                     output.clear_output()
