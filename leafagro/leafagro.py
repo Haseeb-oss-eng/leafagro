@@ -297,7 +297,7 @@ class Map(ipyleaflet.Map):
             if change.icon == "basemap":
                 with output:
                     output.clear_output()
-                    add_basemap_gui()
+                    self.add_basemap_gui()
             elif change.icon == "map":
                 with output:
                     output.clear_output()
