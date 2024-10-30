@@ -87,6 +87,8 @@ nav:
         - examples/raster.ipynb
         - examples/toolbar.ipynb
         - examples/vector.ipynb
+        - examples/folium.ipynb
+        - examples/agriMonitor.ipynb
         
 
     - API Reference:
