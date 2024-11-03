@@ -355,7 +355,7 @@ class Map(ipyleaflet.Map):
                 date = row['Date']
                 self.add_layer_tile(tile_url, name=f"{date} {data}")
     
-    def show_agromontioring_stats(self,API_Key, polygonId, startDate, endDate, data):
+    def show_agromontioring_stats(self,API_Key, polygonId, startDate, endDate, data, display=False):
         """Display the Summary Statistics of Table
 
         Args:
@@ -364,6 +364,7 @@ class Map(ipyleaflet.Map):
             startDate (str): Date format "YYYY-MM-DD" (ex. "2018-01-01").
             endDate (str): Date format "YYYY-MM-DD" (ex. "2018-02-01").
             data (str): Data to retrieve from Agromonitoring. Available Data ['truecolor', 'falsecolor', 'ndvi', 'evi', 'evi2', 'ndwi', 'nri', 'dswi'].
+            display (bool): True to display the stats on map. (default: False)
         """
         from leafagro.agromonitoring import Agromonitoring as ag
         
@@ -372,15 +373,19 @@ class Map(ipyleaflet.Map):
                 print(stats_df)
         else:
                 print(f"The given data or Polygon ID is Wrong is not available in Agromonitoring")   
+        
+        if display:
+            for stat in stats_df:
+                self.display_stats(stat['URL'],stat['Date'])
 
     
     
-    def display_stats(self, statsUrl):
+    def display_stats(self, statsUrl, date):
         """Display Summary Statistics of Polygon
 
         Args:
             statsUrl (str): Input Stats Url from agromonitoring stats.
-            polygonID (str): Provide polygon ID of Agromonitoring.
+            date (str): Date of the stats.
         """
         import requests
         import time
@@ -391,7 +396,7 @@ class Map(ipyleaflet.Map):
         # Fetch statistics data from the given URL
             data = requests.get(statsUrl)
             data_dict = data.json()
-            stats_df = pd.DataFrame([data_dict], index=[1], columns=data_dict.keys())
+            stats_df = pd.DataFrame([data_dict], index=[date], columns=data_dict.keys())
 
             # Parse the stats URL to extract polygon ID and API key
             parsed_url = urlparse(statsUrl)
