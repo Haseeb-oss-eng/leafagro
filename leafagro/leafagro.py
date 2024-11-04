@@ -355,7 +355,7 @@ class Map(ipyleaflet.Map):
                 date = row['Date']
                 self.add_layer_tile(tile_url, name=f"{date} {data}")
     
-    def show_agromontioring_stats(self,API_Key, polygonId, startDate, endDate, data, display=False):
+    def show_agromonitoring_stats(self,API_Key, polygonId, startDate, endDate, data, display=False):
         """Display the Summary Statistics of Table
 
         Args:
