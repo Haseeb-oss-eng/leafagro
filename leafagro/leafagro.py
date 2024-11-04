@@ -369,14 +369,16 @@ class Map(ipyleaflet.Map):
         from leafagro.agromonitoring import Agromonitoring as ag
         
         stats_df = ag.get_agromonitoring_stat(API_Key,polygonId, startDate, endDate, data)
-        if stats_df is not None:
-                print(stats_df)
-        else:
-                print(f"The given data or Polygon ID is Wrong is not available in Agromonitoring")   
-        
+          
         if display:
-            for stat in stats_df:
-                self.display_stats(stat['URL'],stat['Date'])
+            for index, stat in stats_df.iterrows():
+                self.display_stats(stat['URL'], stat['Date'])
+        else:
+            if stats_df is not None:
+                    print(stats_df)
+            else:
+                    print(f"The given data or Polygon ID is Wrong is not available in Agromonitoring") 
+
 
     
     
