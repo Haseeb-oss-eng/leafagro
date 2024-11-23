@@ -6,3 +6,4 @@ geopandas
 pandas
 ipywidgets
 folium
+gdal

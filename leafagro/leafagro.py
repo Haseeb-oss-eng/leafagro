@@ -151,7 +151,51 @@ class Map(ipyleaflet.Map):
         if zoom_to_layer:
             self.center = client.center()
             self.zoom = client.default_zoom
-    
+
+    def normalizedDifference(self,firstBand, secondBand, layer_name, colormap, **kwargs):
+        """Add Normalized Difference data in map (firstBand - secondBand)/(firstBand + secondBand + 1e-10)
+
+        Args:
+            firstBand (raster): Provide the first Band. (ex:NIR)
+            secondBand (raster): Provide the second Band. (ex:Red)
+            colormap (str): Provide the colormap. (ex:'terrain','viridis')
+        """
+        from osgeo import gdal
+        from tempfile import NamedTemporaryFile
+
+        b1 = gdal.Open(firstBand)
+        b2 = gdal.Open(secondBand)
+
+
+        # Assume band 1 is RED and band 2 is NIR. Modify if bands are different.
+        b1_band = b1.ReadAsArray().astype("float32")
+        b2_band = b2.ReadAsArray().astype("float32")
+
+        # Calculate NDVI
+        ndvi = (b1_band - b2_band) / (b1_band + b2_band + 1e-10)
+
+        # Save NDVI to a temporary file
+        with NamedTemporaryFile(suffix=".tif", delete=False) as tmpfile:
+            temp_file_path = tmpfile.name
+
+        driver = gdal.GetDriverByName("GTiff")
+        ndvi_dataset = driver.Create(
+            temp_file_path, dataset.RasterXSize, dataset.RasterYSize, 1, gdal.GDT_Float32
+        )
+
+        ndvi_dataset.SetGeoTransform(dataset.GetGeoTransform())
+        ndvi_dataset.SetProjection(dataset.GetProjection())
+
+        # Write NDVI data to the temporary file
+        ndvi_band = ndvi_dataset.GetRasterBand(1)
+        ndvi_band.WriteArray(ndvi)
+        ndvi_band.FlushCache()
+
+        ndvi_dataset = None  # Close the dataset to flush to disk
+
+        # Add NDVI raster to the map using Leafmap's add_raster function
+        self.add_raster(temp_file_path, layer_name=layer_name,colormap=colormap)
+
     def add_zoom_slider(self, description= "Zoom level", min=0, max=15, value=7, position="topright", **kwargs):
 
         """Add Slider-level bar in map
