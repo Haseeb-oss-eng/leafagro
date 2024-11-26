@@ -152,42 +152,42 @@ class Map(ipyleaflet.Map):
             self.center = client.center()
             self.zoom = client.default_zoom
 
-    def normalizedDifference(self,firstBand, secondBand, layer_name, colormap, **kwargs):
-        """Add Normalized Difference data in map (firstBand - secondBand)/(firstBand + secondBand + 1e-10)
+    # def normalizedDifference(self,firstBand, secondBand, layer_name, colormap, **kwargs):
+    #     """Add Normalized Difference data in map (firstBand - secondBand)/(firstBand + secondBand + 1e-10)
 
-        Args:
-            firstBand (raster): Provide the first Band. (ex:NIR)
-            secondBand (raster): Provide the second Band. (ex:Red)
-            colormap (str): Provide the colormap. (ex:'terrain','viridis')
-        """
-        import rasterio
-        from tempfile import NamedTemporaryFile
+    #     Args:
+    #         firstBand (raster): Provide the first Band. (ex:NIR)
+    #         secondBand (raster): Provide the second Band. (ex:Red)
+    #         colormap (str): Provide the colormap. (ex:'terrain','viridis')
+    #     """
+    #     import rasterio
+    #     from tempfile import NamedTemporaryFile
         
-        band1 = rasterio.open(firstBand)
-        band2 = rasterio.open(secondBand)
+    #     band1 = rasterio.open(firstBand)
+    #     band2 = rasterio.open(secondBand)
 
-        if band1.meta == band2.meta:
-            b1_band = band1.astype("float32")
-            b2_band = band2.astype("float32")
-            meta = band1.meta or band2.meta
-        else:
-            return "The provide band is not same metadata"
+    #     if band1.meta == band2.meta:
+    #         b1_band = band1.astype("float32")
+    #         b2_band = band2.astype("float32")
+    #         meta = band1.meta or band2.meta
+    #     else:
+    #         return "The provide band is not same metadata"
 
-        # Calculate NDVI
-        ndvi = (b1_band - b2_band) / (b1_band + b2_band + 1e-10)
+    #     # Calculate NDVI
+    #     ndvi = (b1_band - b2_band) / (b1_band + b2_band + 1e-10)
 
-        # Save NDVI to a temporary file
-        with NamedTemporaryFile(suffix=".tif", delete=False) as tmpfile:
-            temp_file_path = tmpfile.name
+    #     # Save NDVI to a temporary file
+    #     with NamedTemporaryFile(suffix=".tif", delete=False) as tmpfile:
+    #         temp_file_path = tmpfile.name
 
-        meta.update(dtype="float32",count=1)
+    #     meta.update(dtype="float32",count=1)
 
-        with rasterio.open(temp_file_path,'w',**meta) as dst:
-            dst.write(ndvi,1)
+    #     with rasterio.open(temp_file_path,'w',**meta) as dst:
+    #         dst.write(ndvi,1)
 
 
-        # Add NDVI raster to the map using Leafmap's add_raster function
-        self.add_raster(temp_file_path, layer_name=layer_name,colormap=colormap)
+    #     # Add NDVI raster to the map using Leafmap's add_raster function
+    #     self.add_raster(temp_file_path, layer_name=layer_name,colormap=colormap)
 
     def add_zoom_slider(self, description= "Zoom level", min=0, max=15, value=7, position="topright", **kwargs):
 
