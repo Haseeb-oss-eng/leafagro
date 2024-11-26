@@ -6,4 +6,3 @@ geopandas
 pandas
 ipywidgets
 folium
-rasterio
