@@ -6,5 +6,4 @@ geopandas
 pandas
 ipywidgets
 folium
-osgeo
-gdal
+rasterio
