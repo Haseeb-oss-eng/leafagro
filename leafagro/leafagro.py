@@ -182,10 +182,10 @@ class Map(ipyleaflet.Map):
         # Calculate Normalized Difference
         normalizedDifference = (band1_array - band2_array) / (band1_array + band2_array + 1e-10)
 
-        # Clip ND values to the range [-1, 1] to avoid potential issues
+        # Clip Normalized Difference values to the range [-1, 1] to avoid potential issues
         normalizedDifference = np.clip(normalizedDifference, -1, 1)
 
-        # Add the ND raster to the map using self.add_raster
+        # Add the Normalized Difference raster to the map using self.add_raster
         self.add_raster(normalizedDifference, layer_name=layer_name, colormap=colormap)
 
     def add_zoom_slider(self, description= "Zoom level", min=0, max=15, value=7, position="topright", **kwargs):
