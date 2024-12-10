@@ -152,42 +152,41 @@ class Map(ipyleaflet.Map):
             self.center = client.center()
             self.zoom = client.default_zoom
 
-    # def normalizedDifference(self,firstBand, secondBand, layer_name, colormap, **kwargs):
-    #     """Add Normalized Difference data in map (firstBand - secondBand)/(firstBand + secondBand + 1e-10)
+    
 
-    #     Args:
-    #         firstBand (raster): Provide the first Band. (ex:NIR)
-    #         secondBand (raster): Provide the second Band. (ex:Red)
-    #         colormap (str): Provide the colormap. (ex:'terrain','viridis')
-    #     """
-    #     import rasterio
-    #     from tempfile import NamedTemporaryFile
+    def normalizedDifference(self, firstBand, secondBand, layer_name, colormap, **kwargs):
+        """
+        Add Normalized Difference data in map (firstBand - secondBand) / (firstBand + secondBand + 1e-10).
+
+        Args:
+            firstBand (str): Path to the first band file (e.g., NIR).
+            secondBand (str): Path to the second band file (e.g., Red).
+            layer_name (str): Layer name for the map.
+            colormap (str): Colormap for the visualization (e.g., 'terrain', 'viridis').
+        """
+        from PIL import Image
+        import numpy as np
         
-    #     band1 = rasterio.open(firstBand)
-    #     band2 = rasterio.open(secondBand)
+        # Open both bands using PIL.Image
+        band1_img = Image.open(firstBand)
+        band2_img = Image.open(secondBand)
 
-    #     if band1.meta == band2.meta:
-    #         b1_band = band1.astype("float32")
-    #         b2_band = band2.astype("float32")
-    #         meta = band1.meta or band2.meta
-    #     else:
-    #         return "The provide band is not same metadata"
+        # Ensure both bands have the same size
+        if band1_img.size != band2_img.size:
+            raise ValueError("The provided bands do not have the same dimensions.")
 
-    #     # Calculate NDVI
-    #     ndvi = (b1_band - b2_band) / (b1_band + b2_band + 1e-10)
+        # Convert bands to NumPy arrays
+        band1_array = np.array(band1_img, dtype=np.float32)
+        band2_array = np.array(band2_img, dtype=np.float32)
 
-    #     # Save NDVI to a temporary file
-    #     with NamedTemporaryFile(suffix=".tif", delete=False) as tmpfile:
-    #         temp_file_path = tmpfile.name
+        # Calculate Normalized Difference
+        nd = (band1_array - band2_array) / (band1_array + band2_array + 1e-10)
 
-    #     meta.update(dtype="float32",count=1)
+        # Clip ND values to the range [-1, 1] to avoid potential issues
+        nd = np.clip(nd, -1, 1)
 
-    #     with rasterio.open(temp_file_path,'w',**meta) as dst:
-    #         dst.write(ndvi,1)
-
-
-    #     # Add NDVI raster to the map using Leafmap's add_raster function
-    #     self.add_raster(temp_file_path, layer_name=layer_name,colormap=colormap)
+        # Add the ND raster to the map using self.add_raster
+        self.add_raster(nd, layer_name=layer_name, colormap=colormap)
 
     def add_zoom_slider(self, description= "Zoom level", min=0, max=15, value=7, position="topright", **kwargs):
 
