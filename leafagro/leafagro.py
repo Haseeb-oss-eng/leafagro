@@ -185,6 +185,12 @@ class Map(ipyleaflet.Map):
         # Clip Normalized Difference values to the range [-1, 1] to avoid potential issues
         normalizedDifference = np.clip(normalizedDifference, -1, 1)
 
+         # Save the NDVI array to a temporary file
+        with tempfile.NamedTemporaryFile(suffix=".tif", delete=False) as tmpfile:
+            ndvi_path = tmpfile.name
+        ndvi_image = Image.fromarray((normalizedDifference * 255).astype(np.uint8))  # Scale to 0-255 for saving
+        ndvi_image.save(ndvi_path)
+
         # Add the Normalized Difference raster to the map using self.add_raster
         self.add_raster(normalizedDifference, layer_name=layer_name, colormap=colormap)
 
